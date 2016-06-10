@@ -24,9 +24,12 @@ public class Movement :NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		cameraRig = GameObject.Find ("[CameraRig]");
-		cameraRig.transform.position = transform.position;
-		cameraRig.transform.rotation = transform.rotation;
+        if (isLocalPlayer)
+        {
+            cameraRig = GameObject.Find("[CameraRig]");
+            cameraRig.transform.position = transform.position;
+            cameraRig.transform.rotation = transform.rotation;
+        }
 
 		head = transform.GetChild (0);
 		leftHand = transform.GetChild (1);
