@@ -5,6 +5,8 @@ using System.Collections.Generic;
 
 public class Movement :NetworkBehaviour {
 
+    bool isHost;
+
 	Transform head;
 	Transform leftHand;
 	Transform rightHand;
@@ -24,6 +26,9 @@ public class Movement :NetworkBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+        isHost = GameObject.Find("NetworkManager").GetComponent<CustomManager>().isHost;
+
         if (isLocalPlayer)
         {
             cameraRig = GameObject.Find("[CameraRig]");
@@ -77,6 +82,7 @@ public class Movement :NetworkBehaviour {
 		syncLeft.localRotation = leftrot;
 		syncRight.localPosition = rightpos;
 		syncRight.localRotation = rightrot;
+        Debug.Log("ServerTransform");
 
 		RpcUpdateTransforms (headpos, headrot, leftpos, leftrot, rightpos, rightrot);
 	}
@@ -85,8 +91,8 @@ public class Movement :NetworkBehaviour {
 	[ClientRpc]
 	void RpcUpdateTransforms(Vector3 headpos, Quaternion headrot, Vector3 leftpos, Quaternion leftrot, Vector3 rightpos, Quaternion rightrot)
 	{
-		if (!isLocalPlayer) {
-			
+		if (!isLocalPlayer && !isHost)
+        {
 			syncHead.localPosition = headpos;
 			syncHead.localRotation = headrot;
 			syncLeft.localPosition = leftpos;
@@ -98,7 +104,7 @@ public class Movement :NetworkBehaviour {
 
 	void LerpTransforms()
 	{
-		if (!isLocalPlayer) 
+		if (!isLocalPlayer && !isHost) 
 		{
 			head.localPosition = Vector3.Lerp (head.localPosition, syncHead.localPosition, Time.fixedDeltaTime * headLerpRate);
 			leftHand.localPosition = Vector3.Lerp (leftHand.localPosition, syncLeft.localPosition, Time.fixedDeltaTime * handLerpRate);

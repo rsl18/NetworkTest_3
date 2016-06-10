@@ -12,6 +12,8 @@ public class CustomManager : NetworkManager
 	public Vector3 cameraRigoffset;
 	List<Transform> spawnPosList = new List<Transform>();
 
+    public bool isHost;
+
 
 	public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
 	{
@@ -21,9 +23,13 @@ public class CustomManager : NetworkManager
 		var player = (GameObject)GameObject.Instantiate(playerPrefab, startPos.position, startPos.rotation);
 		NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
 
-
-
 	}
-		
+
+    public override void OnStartHost()
+    {
+        base.OnStartHost();
+        isHost = true;
+    }
+
 
 }
