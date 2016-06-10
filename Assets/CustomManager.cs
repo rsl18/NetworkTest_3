@@ -21,9 +21,7 @@ public class CustomManager : NetworkManager
 		var player = (GameObject)GameObject.Instantiate(playerPrefab, startPos.position, startPos.rotation);
 		NetworkServer.AddPlayerForConnection(conn, player, playerControllerId);
 
-		cameraRig = GameObject.Find ("[CameraRig]");
-		cameraRig.transform.position = startPos.position + cameraRigoffset;
-		cameraRig.transform.rotation = startPos.rotation;
+
 
 	}
 		

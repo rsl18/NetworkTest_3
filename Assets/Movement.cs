@@ -25,6 +25,9 @@ public class Movement :NetworkBehaviour {
 	// Use this for initialization
 	void Start () {
 		cameraRig = GameObject.Find ("[CameraRig]");
+		cameraRig.transform.position = transform.position;
+		cameraRig.transform.rotation = transform.rotation;
+
 		head = transform.GetChild (0);
 		leftHand = transform.GetChild (1);
 		rightHand = transform.GetChild (2);
@@ -33,8 +36,7 @@ public class Movement :NetworkBehaviour {
 		syncLeft = leftHand.transform;
 		syncRight = rightHand.transform;
 	}
-
-
+		
 	void FixedUpdate () {
 		ReadCameraRig ();
 		LerpTransforms ();
@@ -93,7 +95,8 @@ public class Movement :NetworkBehaviour {
 
 	void LerpTransforms()
 	{
-		if (!isLocalPlayer) {
+		if (!isLocalPlayer) 
+		{
 			head.localPosition = Vector3.Lerp (head.localPosition, syncHead.localPosition, Time.fixedDeltaTime * headLerpRate);
 			leftHand.localPosition = Vector3.Lerp (leftHand.localPosition, syncLeft.localPosition, Time.fixedDeltaTime * handLerpRate);
 			rightHand.localPosition = Vector3.Lerp (rightHand.localPosition, syncRight.localPosition, Time.fixedDeltaTime * handLerpRate);
