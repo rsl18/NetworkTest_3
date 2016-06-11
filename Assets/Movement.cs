@@ -19,7 +19,9 @@ public class Movement :NetworkBehaviour {
     public float headLerpRotRate;
     public float handLerpPosRate;
     public float handLerpRotRate;
-    public float threshold;
+
+    public float thresholdPos;
+    public float thresholdRot;
 
 	Vector3 syncHeadPos;
     Vector3 syncLeftPos;
@@ -137,32 +139,32 @@ public class Movement :NetworkBehaviour {
 		if (!isLocalPlayer && !isHost) 
 		{
             Debug.Log("LerpTransforms");
-            if (Vector3.Distance(syncHeadPos, head.position) > threshold)
+            if (Vector3.Distance(syncHeadPos, head.position) > thresholdPos)
             {
                 head.position = Vector3.Lerp(head.position, syncHeadPos, Time.fixedDeltaTime * headLerpPosRate);
             }
 
-            if (Quaternion.Angle(syncHeadRot, head.rotation) > threshold)
+            if (Quaternion.Angle(syncHeadRot, head.rotation) > thresholdRot)
             {
                 head.rotation = Quaternion.Lerp(head.localRotation, syncHeadRot, Time.fixedDeltaTime * headLerpRotRate);
             }
 
-            if (Vector3.Distance(syncLeftPos, leftHand.position) > threshold)
+            if (Vector3.Distance(syncLeftPos, leftHand.position) > thresholdPos)
             {
                 leftHand.position = Vector3.Lerp(leftHand.position, syncLeftPos, Time.fixedDeltaTime * handLerpPosRate);
             }
 
-            if (Quaternion.Angle(syncLeftRot, leftHand.rotation) > threshold)
+            if (Quaternion.Angle(syncLeftRot, leftHand.rotation) > thresholdRot)
             {
                 leftHand.rotation = Quaternion.Lerp(leftHand.localRotation, syncLeftRot, Time.fixedDeltaTime * handLerpRotRate);
             }
 
-            if (Vector3.Distance(syncRightPos, rightHand.position) > threshold)
+            if (Vector3.Distance(syncRightPos, rightHand.position) > thresholdPos)
             {
                 rightHand.position = Vector3.Lerp(rightHand.position, syncRightPos, Time.fixedDeltaTime * handLerpPosRate);
             }
 
-            if (Quaternion.Angle(syncRightRot, rightHand.rotation) > threshold)
+            if (Quaternion.Angle(syncRightRot, rightHand.rotation) > thresholdRot)
             {
                 rightHand.rotation = Quaternion.Lerp(rightHand.localRotation, syncRightRot, Time.fixedDeltaTime * handLerpRotRate);
             }
