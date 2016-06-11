@@ -5,7 +5,8 @@ using System.Collections.Generic;
 
 public class Movement :NetworkBehaviour {
 
-    bool isHost;
+    public bool isHost;
+    public bool isLocal;
 
 	Transform head;
 	Transform leftHand;
@@ -24,8 +25,8 @@ public class Movement :NetworkBehaviour {
     public float thresholdRot;
 
 	Vector3 syncHeadPos;
-    Vector3 syncLeftPos;
-    Vector3 syncRightPos;
+    public Vector3 syncLeftPos;
+    public Vector3 syncRightPos;
     Quaternion syncHeadRot;
     Quaternion syncLeftRot;
     Quaternion syncRightRot;
@@ -35,6 +36,7 @@ public class Movement :NetworkBehaviour {
     void Start () {
 
         isHost = GameObject.Find("NetworkManager").GetComponent<CustomManager>().isHost;
+        isLocal = isLocalPlayer;
 
         if (isLocalPlayer)
         {
