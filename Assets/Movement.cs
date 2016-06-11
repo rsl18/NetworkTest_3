@@ -102,7 +102,7 @@ public class Movement :NetworkBehaviour {
 	[ClientRpc]
 	void RpcUpdateTransforms(Vector3 headpos, Quaternion headrot, Vector3 leftpos, Quaternion leftrot, Vector3 rightpos, Quaternion rightrot)
 	{
-		if (!isLocalPlayer && !isHost)
+		if (!isLocalPlayer)
         {
             if (Vector3.Distance(syncHeadPos, headpos) > 0)
             {
@@ -138,7 +138,7 @@ public class Movement :NetworkBehaviour {
 
 	void LerpTransforms()
 	{
-		if (!isLocalPlayer && !isHost) 
+		if (!isLocalPlayer) 
 		{
             Debug.Log("LerpTransforms");
             if (Vector3.Distance(syncHeadPos, head.position) > thresholdPos)
