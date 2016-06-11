@@ -5,18 +5,24 @@ using System.Collections;
 
 public class textupdate : MonoBehaviour {
 
-    GameObject manager;
-    Text text;
+   NetworkClient nclient;
+   CustomManager manager;
+   Text text;
 
 	// Use this for initialization
 	void Start () {
-        manager = GameObject.Find("NetworkManager");
+        manager = GameObject.Find("NetworkManager").GetComponent<CustomManager>();
+        nclient = manager.client;
         text = GetComponent<Text>();
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-        text.text = manager.GetComponent<NetworkManager>().client.GetRTT().ToString();
+        if (nclient != null)
+        {
+            int latency = nclient.GetRTT();
+            text.text = latency.ToString();
+        }
 	}
 }

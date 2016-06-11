@@ -56,6 +56,7 @@ public class Movement :NetworkBehaviour {
 	{
 		if (isLocalPlayer) 
 		{
+            Debug.Log("READCAMERA");
 			Transform cameraHead = cameraRig.transform.GetChild (2);
 			Transform cameraLeft = cameraRig.transform.GetChild (0);
 			Transform cameraRight = cameraRig.transform.GetChild (1);
@@ -66,6 +67,8 @@ public class Movement :NetworkBehaviour {
 			leftHand.localRotation = cameraLeft.localRotation;
 			rightHand.position = cameraRight.position;
 			rightHand.localRotation = cameraRight.localRotation;
+
+            Debug.Log(cameraHead.position);
 
 			CmdSendTransforms (head.position, head.localRotation, leftHand.position, leftHand.localRotation, rightHand.position, rightHand.localRotation);
 		}
