@@ -93,19 +93,19 @@ public class Movement :NetworkBehaviour {
 	{
 		if (!isLocalPlayer && !isHost)
         {
-            if (Vector3.Distance(syncHead.position, headpos) > threshold)
+            if (Vector3.Distance(syncHead.position, headpos) > 0)
             {
                 syncHead.position = headpos;
                 syncHead.localRotation = headrot;
             }
 
-            if (Vector3.Distance(syncLeft.position, leftpos) > threshold)
+            if (Vector3.Distance(syncLeft.position, leftpos) > 0)
             {
                 syncLeft.position = leftpos;
                 syncLeft.localRotation = leftrot;
             }
 
-            if (Vector3.Distance(syncRight.position, rightpos) > threshold)
+            if (Vector3.Distance(syncRight.position, rightpos) > 0)
             {
                 syncRight.position = rightpos;
                 syncRight.localRotation = rightrot;
@@ -117,6 +117,7 @@ public class Movement :NetworkBehaviour {
 	{
 		if (!isLocalPlayer && !isHost) 
 		{
+            Debug.Log("LerpTransforms");
             if (Vector3.Distance(syncHead.position, head.position) > threshold)
             {
                 head.position = Vector3.Lerp(head.position, syncHead.position, Time.fixedDeltaTime * headLerpRate);
@@ -125,12 +126,14 @@ public class Movement :NetworkBehaviour {
 
             if (Vector3.Distance(syncLeft.position, leftHand.position) > threshold)
             {
+                Debug.Log("Lerp");
                 leftHand.position = Vector3.Lerp(leftHand.position, syncLeft.position, Time.fixedDeltaTime * handLerpRate);
                 leftHand.localRotation = Quaternion.Lerp(leftHand.localRotation, syncLeft.localRotation, Time.fixedDeltaTime * handLerpRate);
             }
 
             if (Vector3.Distance(syncRight.position, rightHand.position) > threshold)
             {
+                Debug.Log("Lerp");
                 rightHand.position = Vector3.Lerp(rightHand.position, syncRight.position, Time.fixedDeltaTime * handLerpRate);
                 rightHand.localRotation = Quaternion.Lerp(rightHand.localRotation, syncRight.localRotation, Time.fixedDeltaTime * handLerpRate);
             }
