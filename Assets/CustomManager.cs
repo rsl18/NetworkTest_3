@@ -29,6 +29,23 @@ public class CustomManager : NetworkManager
     {
         base.OnStartHost();
         isHost = true;
+
+        Debug.Log("HOST");
+    }
+
+    public override void OnStartServer()
+    {
+        base.OnStartServer();
+
+        Debug.Log("SERVER");
+
+    }
+
+    public override void OnStartClient(NetworkClient client)
+    {
+        base.OnStartClient(client);
+
+        Debug.Log("CLIENT");
     }
 
 
