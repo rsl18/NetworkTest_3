@@ -21,12 +21,15 @@ public class Movement :NetworkBehaviour {
     public float handLerpPosRate;
     public float handLerpRotRate;
 
-    public float thresholdPos;
-    public float thresholdRot;
+    public float lerpThresholdPos;
+    public float lerpThresholdRot;
+
+    public float sendThresholdPos;
+    public float sendThresholdRot;
 
 	Vector3 syncHeadPos;
-    public Vector3 syncLeftPos;
-    public Vector3 syncRightPos;
+    Vector3 syncLeftPos;
+    Vector3 syncRightPos;
     Quaternion syncHeadRot;
     Quaternion syncLeftRot;
     Quaternion syncRightRot;
@@ -83,9 +86,49 @@ public class Movement :NetworkBehaviour {
 		}
 	}
 
+    void LerpTransforms()
+    {
+        if (!isLocalPlayer)
+        {
+            Debug.Log("LerpTransforms");
+            if (Vector3.Distance(syncHeadPos, head.position) > lerpThresholdPos)
+            {
+                head.position = Vector3.Lerp(head.position, syncHeadPos, Time.fixedDeltaTime * headLerpPosRate);
+            }
+
+            if (Quaternion.Angle(syncHeadRot, head.rotation) > lerpThresholdRot)
+            {
+                head.rotation = Quaternion.Lerp(head.localRotation, syncHeadRot, Time.fixedDeltaTime * headLerpRotRate);
+            }
+
+            if (Vector3.Distance(syncLeftPos, leftHand.position) > lerpThresholdPos)
+            {
+                leftHand.position = Vector3.Lerp(leftHand.position, syncLeftPos, Time.fixedDeltaTime * handLerpPosRate);
+            }
+
+            if (Quaternion.Angle(syncLeftRot, leftHand.rotation) > lerpThresholdRot)
+            {
+                leftHand.rotation = Quaternion.Lerp(leftHand.localRotation, syncLeftRot, Time.fixedDeltaTime * handLerpRotRate);
+            }
+
+            if (Vector3.Distance(syncRightPos, rightHand.position) > lerpThresholdPos)
+            {
+                rightHand.position = Vector3.Lerp(rightHand.position, syncRightPos, Time.fixedDeltaTime * handLerpPosRate);
+            }
+
+            if (Quaternion.Angle(syncRightRot, rightHand.rotation) > lerpThresholdRot)
+            {
+                rightHand.rotation = Quaternion.Lerp(rightHand.localRotation, syncRightRot, Time.fixedDeltaTime * handLerpRotRate);
+            }
+        }
+    }
 
 
-	[Command]
+
+
+
+
+    [Command]
 	void CmdSendTransforms (Vector3 headpos, Quaternion headrot, Vector3 leftpos, Quaternion leftrot, Vector3 rightpos, Quaternion rightrot)
 	{
 		syncHeadPos = headpos;
@@ -104,72 +147,37 @@ public class Movement :NetworkBehaviour {
 	{
 		if (!isLocalPlayer)
         {
-            if (Vector3.Distance(syncHeadPos, headpos) > 0)
+            if (Vector3.Distance(syncHeadPos, headpos) > sendThresholdPos)
             {
                 syncHeadPos= headpos;
             }
 
-            if (Quaternion.Angle(syncHeadRot, headrot) > 0)
+            if (Quaternion.Angle(syncHeadRot, headrot) > sendThresholdRot)
             {
                 syncHeadRot = headrot;
             }
 
-            if (Vector3.Distance(syncLeftPos, leftpos) > 0)
+            if (Vector3.Distance(syncLeftPos, leftpos) > sendThresholdPos)
             {
                 syncLeftPos = leftpos;
             }
 
-            if (Quaternion.Angle(syncLeftRot, leftrot) > 0)
+            if (Quaternion.Angle(syncLeftRot, leftrot) > sendThresholdRot)
             {
                 syncLeftRot = leftrot;
             }
 
-            if (Vector3.Distance(syncRightPos, rightpos) > 0)
+            if (Vector3.Distance(syncRightPos, rightpos) > sendThresholdPos)
             {
                 syncRightPos = rightpos;
             }
 
-            if (Quaternion.Angle(syncRightRot, rightrot) > 0)
+            if (Quaternion.Angle(syncRightRot, rightrot) > sendThresholdRot)
             {
                 syncRightRot = rightrot;
             }
         }
 	}
 
-	void LerpTransforms()
-	{
-		if (!isLocalPlayer) 
-		{
-            Debug.Log("LerpTransforms");
-            if (Vector3.Distance(syncHeadPos, head.position) > thresholdPos)
-            {
-                head.position = Vector3.Lerp(head.position, syncHeadPos, Time.fixedDeltaTime * headLerpPosRate);
-            }
 
-            if (Quaternion.Angle(syncHeadRot, head.rotation) > thresholdRot)
-            {
-                head.rotation = Quaternion.Lerp(head.localRotation, syncHeadRot, Time.fixedDeltaTime * headLerpRotRate);
-            }
-
-            if (Vector3.Distance(syncLeftPos, leftHand.position) > thresholdPos)
-            {
-                leftHand.position = Vector3.Lerp(leftHand.position, syncLeftPos, Time.fixedDeltaTime * handLerpPosRate);
-            }
-
-            if (Quaternion.Angle(syncLeftRot, leftHand.rotation) > thresholdRot)
-            {
-                leftHand.rotation = Quaternion.Lerp(leftHand.localRotation, syncLeftRot, Time.fixedDeltaTime * handLerpRotRate);
-            }
-
-            if (Vector3.Distance(syncRightPos, rightHand.position) > thresholdPos)
-            {
-                rightHand.position = Vector3.Lerp(rightHand.position, syncRightPos, Time.fixedDeltaTime * handLerpPosRate);
-            }
-
-            if (Quaternion.Angle(syncRightRot, rightHand.rotation) > thresholdRot)
-            {
-                rightHand.rotation = Quaternion.Lerp(rightHand.localRotation, syncRightRot, Time.fixedDeltaTime * handLerpRotRate);
-            }
-        }
-	}
 }
