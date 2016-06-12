@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 public class Movement :NetworkBehaviour {
 
+
     public bool isHost;
     public bool isLocal;
 
@@ -15,8 +16,8 @@ public class Movement :NetworkBehaviour {
 	GameObject cameraRig;
 
 
-	//Lerping
-	public float headLerpPosRate;
+    //Lerping
+    public float headLerpPosRate;
     public float headLerpRotRate;
     public float handLerpPosRate;
     public float handLerpRotRate;
@@ -24,8 +25,10 @@ public class Movement :NetworkBehaviour {
     public float lerpThresholdPos;
     public float lerpThresholdRot;
 
-    public float sendThresholdPos;
-    public float sendThresholdRot;
+
+    //Misnamed and useless
+    //public float sendThresholdPos;      
+    //public float sendThresholdRot;
 
 	Vector3 syncHeadPos;
     Vector3 syncLeftPos;
@@ -41,6 +44,8 @@ public class Movement :NetworkBehaviour {
         isHost = GameObject.Find("NetworkManager").GetComponent<CustomManager>().isHost;
         isLocal = isLocalPlayer;
 
+
+        // Set up
         if (isLocalPlayer)
         {
             cameraRig = GameObject.Find("[CameraRig]");
@@ -52,39 +57,51 @@ public class Movement :NetworkBehaviour {
 		leftHand = transform.GetChild (1);
 		rightHand = transform.GetChild (2);
 
+        // Initialize buffers
+        BufferInit();
+    }
+
+	void FixedUpdate () {
+        if (isLocalPlayer)
+        {
+            ReadCameraRig();
+            CmdSendUpdates(head.position, head.localRotation, leftHand.position, leftHand.localRotation, rightHand.position, rightHand.localRotation);
+        }
+
+        else
+        {
+            LerpTransforms();
+        }
+	}
+
+
+
+    void BufferInit()
+    {
         syncHeadPos = head.position;
-		syncLeftPos = leftHand.position;
-		syncRightPos = rightHand.position;
+        syncLeftPos = leftHand.position;
+        syncRightPos = rightHand.position;
         syncHeadRot = head.rotation;
         syncLeftRot = leftHand.rotation;
         syncRightRot = rightHand.rotation;
     }
-		
-	void FixedUpdate () {
-		ReadCameraRig ();
-		LerpTransforms ();
-
-	}
 
 
-	void ReadCameraRig()
+    void ReadCameraRig()
 	{
-		if (isLocalPlayer) 
-		{
-			Transform cameraHead = cameraRig.transform.GetChild (2);
-			Transform cameraLeft = cameraRig.transform.GetChild (0);
-			Transform cameraRight = cameraRig.transform.GetChild (1);
+		Transform cameraHead = cameraRig.transform.GetChild (2);
+		Transform cameraLeft = cameraRig.transform.GetChild (0);
+		Transform cameraRight = cameraRig.transform.GetChild (1);
 
-			head.position = cameraHead.position;
-			head.localRotation = cameraHead.localRotation;
-			leftHand.position = cameraLeft.position;
-			leftHand.localRotation = cameraLeft.localRotation;
-			rightHand.position = cameraRight.position;
-			rightHand.localRotation = cameraRight.localRotation;
-
-			CmdSendTransforms (head.position, head.localRotation, leftHand.position, leftHand.localRotation, rightHand.position, rightHand.localRotation);
-		}
+		head.position = cameraHead.position;
+		head.localRotation = cameraHead.localRotation;
+		leftHand.position = cameraLeft.position;
+		leftHand.localRotation = cameraLeft.localRotation;
+		rightHand.position = cameraRight.position;
+		rightHand.localRotation = cameraRight.localRotation;
+		
 	}
+
 
     void LerpTransforms()
     {
@@ -129,7 +146,7 @@ public class Movement :NetworkBehaviour {
 
 
     [Command]
-	void CmdSendTransforms (Vector3 headpos, Quaternion headrot, Vector3 leftpos, Quaternion leftrot, Vector3 rightpos, Quaternion rightrot)
+	void CmdSendUpdates (Vector3 headpos, Quaternion headrot, Vector3 leftpos, Quaternion leftrot, Vector3 rightpos, Quaternion rightrot)
 	{
 		syncHeadPos = headpos;
 		syncHeadRot = headrot;
@@ -138,18 +155,30 @@ public class Movement :NetworkBehaviour {
 		syncRightPos = rightpos;
 		syncRightRot = rightrot;
 
-		RpcUpdateTransforms (headpos, headrot, leftpos, leftrot, rightpos, rightrot);
+		RpcSendUpdates (headpos, headrot, leftpos, leftrot, rightpos, rightrot);
 	}
 
 
 	[ClientRpc]
-	void RpcUpdateTransforms(Vector3 headpos, Quaternion headrot, Vector3 leftpos, Quaternion leftrot, Vector3 rightpos, Quaternion rightrot)
+	void RpcSendUpdates(Vector3 headpos, Quaternion headrot, Vector3 leftpos, Quaternion leftrot, Vector3 rightpos, Quaternion rightrot)
 	{
 		if (!isLocalPlayer)
         {
+            syncHeadPos = headpos;
+            syncHeadRot = headrot;
+            syncLeftPos = leftpos;
+            syncLeftRot = leftrot;
+            syncRightPos = rightpos;
+            syncRightRot = rightrot;
+        }
+
+        ///Useless
+        /*
+        if (!isLocalPlayer)
+        {
             if (Vector3.Distance(syncHeadPos, headpos) > sendThresholdPos)
             {
-                syncHeadPos= headpos;
+                syncHeadPos = headpos;
             }
 
             if (Quaternion.Angle(syncHeadRot, headrot) > sendThresholdRot)
@@ -177,7 +206,9 @@ public class Movement :NetworkBehaviour {
                 syncRightRot = rightrot;
             }
         }
-	}
+        */
+        ///
+    }
 
 
 }

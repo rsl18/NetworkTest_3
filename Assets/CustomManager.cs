@@ -6,11 +6,10 @@ using System.Collections.Generic;
 
 public class CustomManager : NetworkManager
 {
-	int spawnPosIndex = 0;
+
 	Transform startPos;
 	GameObject cameraRig;
 	public Vector3 cameraRigoffset;
-	List<Transform> spawnPosList = new List<Transform>();
 
     public bool isHost;
 
