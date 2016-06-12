@@ -31,8 +31,8 @@ public class Movement :NetworkBehaviour {
     public float sendThresholdRot;
 
 	Vector3 syncHeadPos;
-    Vector3 syncLeftPos;
-    Vector3 syncRightPos;
+    public Vector3 syncLeftPos;
+    public Vector3 syncRightPos;
     Quaternion syncHeadRot;
     Quaternion syncLeftRot;
     Quaternion syncRightRot;
@@ -65,6 +65,8 @@ public class Movement :NetworkBehaviour {
         if (isLocalPlayer)
         {
             ReadCameraRig();
+            Debug.Log("lefthand " + leftHand.position);
+            Debug.Log("righthand " + rightHand.position);
             CmdSendUpdates(head.position, head.rotation, leftHand.position, leftHand.rotation, rightHand.position, rightHand.rotation);
         }
 
