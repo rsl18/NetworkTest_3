@@ -22,12 +22,11 @@ public class Movement :NetworkBehaviour {
     public float handLerpPosRate;
     public float handLerpRotRate;
 
-    //not used atm
+    //Determines lerp refresh threshold
     public float lerpThresholdPos;
     public float lerpThresholdRot;
 
-
-    //Misnamed and useless
+    //Determines client refresh threshold
     public float sendThresholdPos;      
     public float sendThresholdRot;
 
@@ -74,19 +73,6 @@ public class Movement :NetworkBehaviour {
         }
 	}
 
-
-    //not used atm
-    void BufferInit()
-    {
-        syncHeadPos = head.position;
-        syncLeftPos = leftHand.position;
-        syncRightPos = rightHand.position;
-        syncHeadRot = head.rotation;
-        syncLeftRot = leftHand.rotation;
-        syncRightRot = rightHand.rotation;
-    }
-
-
     void ReadCameraRig()
 	{
 		Transform cameraHead = cameraRig.transform.GetChild (2);
@@ -107,7 +93,6 @@ public class Movement :NetworkBehaviour {
     {
         if (!isLocalPlayer)
         {
-            Debug.Log("LerpTransforms");
             if (Vector3.Distance(syncHeadPos, head.position) > lerpThresholdPos)
             {
                 head.position = Vector3.Lerp(head.position, syncHeadPos, Time.fixedDeltaTime * headLerpPosRate);
