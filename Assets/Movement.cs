@@ -101,7 +101,7 @@ public class Movement :NetworkBehaviour {
 
     void LerpTransforms()
     {
-        if (!isLocalPlayer & !isHost)
+        if (!isLocalPlayer)
         {
             head.position = Vector3.Lerp(head.position, syncHeadPos, Time.fixedDeltaTime * headLerpPosRate);
             
