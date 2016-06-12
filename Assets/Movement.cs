@@ -15,6 +15,8 @@ public class Movement :NetworkBehaviour {
 
 
     public bool isHost;
+    public bool isClient;
+    public bool isServer;
     public bool isLocal;
 
 	Transform head;
@@ -46,7 +48,10 @@ public class Movement :NetworkBehaviour {
     void Start () {
 
         //status bools
-        isHost = GameObject.Find("NetworkManager").GetComponent<CustomManager>().isHost;
+        CustomManager manager = GameObject.Find("NetworkManager").GetComponent<CustomManager>();
+        isHost = manager.isHost;
+        isClient = manager.isClient;
+        isServer = manager.isServer;
         isLocal = isLocalPlayer;
 
 
@@ -101,7 +106,7 @@ public class Movement :NetworkBehaviour {
 
     void LerpTransforms()
     {
-        if (!isLocalPlayer)
+        if (!isLocalPlayer && (isHost && !isClient))
         {
             head.position = Vector3.Lerp(head.position, syncHeadPos, Time.fixedDeltaTime * headLerpPosRate);
             
@@ -135,7 +140,7 @@ public class Movement :NetworkBehaviour {
     void RpcSendUpdates(Vector3 headpos, Quaternion headrot, Vector3 leftpos, Quaternion leftrot, Vector3 rightpos, Quaternion rightrot)
     {
 
-        if (!isLocalPlayer && !isHost)
+        if (!isLocalPlayer && (isHost && !isClient))
         {
             if (Vector3.Distance(syncHeadPos, headpos) > keepThresholdPos)
             {

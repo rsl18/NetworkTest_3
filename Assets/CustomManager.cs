@@ -12,6 +12,8 @@ public class CustomManager : NetworkManager
 	public Vector3 cameraRigoffset;
 
     public bool isHost;
+    public bool isClient;
+    public bool isServer;
 
 
 	public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
@@ -35,7 +37,7 @@ public class CustomManager : NetworkManager
     public override void OnStartServer()
     {
         base.OnStartServer();
-
+        isServer = true;
         Debug.Log("SERVER");
 
     }
@@ -43,7 +45,7 @@ public class CustomManager : NetworkManager
     public override void OnStartClient(NetworkClient client)
     {
         base.OnStartClient(client);
-
+        isClient = true;
         Debug.Log("CLIENT");
     }
 
