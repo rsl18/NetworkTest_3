@@ -3,11 +3,12 @@ using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Collections;
 
-public class textupdate : MonoBehaviour {
+public class textupdate : NetworkBehaviour {
 
    NetworkClient nclient;
    CustomManager manager;
    Text text;
+   int latency;
 
 	// Use this for initialization
 	void Start () {
@@ -19,9 +20,10 @@ public class textupdate : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
+        
         if (nclient != null)
         {
-            int latency = nclient.GetRTT();
+            latency = nclient.GetRTT();
             text.text = latency.ToString();
         }
 	}
