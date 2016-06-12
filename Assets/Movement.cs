@@ -106,7 +106,7 @@ public class Movement :NetworkBehaviour {
 
     void LerpTransforms()
     {
-        if (!isLocalPlayer && (isHost && !isClient))
+        if ((!isLocalPlayer && !isHost) || (!isLocalPlayer && isServer))
         {
             head.position = Vector3.Lerp(head.position, syncHeadPos, Time.fixedDeltaTime * headLerpPosRate);
             
@@ -120,6 +120,7 @@ public class Movement :NetworkBehaviour {
             
             rightHand.rotation = Quaternion.Lerp(rightHand.rotation, syncRightRot, Time.fixedDeltaTime * handLerpRotRate);
         }
+
     }
 
     [Command]
@@ -140,7 +141,7 @@ public class Movement :NetworkBehaviour {
     void RpcSendUpdates(Vector3 headpos, Quaternion headrot, Vector3 leftpos, Quaternion leftrot, Vector3 rightpos, Quaternion rightrot)
     {
 
-        if (!isLocalPlayer && (isHost && !isClient))
+        if ((!isLocalPlayer && !isHost) || (!isLocalPlayer && isServer))
         {
             if (Vector3.Distance(syncHeadPos, headpos) > keepThresholdPos)
             {
