@@ -27,8 +27,8 @@ public class Movement :NetworkBehaviour {
 
 
     //Misnamed and useless
-    //public float sendThresholdPos;      
-    //public float sendThresholdRot;
+    public float sendThresholdPos;      
+    public float sendThresholdRot;
 
 	Vector3 syncHeadPos;
     Vector3 syncLeftPos;
@@ -162,18 +162,7 @@ public class Movement :NetworkBehaviour {
 	[ClientRpc]
 	void RpcSendUpdates(Vector3 headpos, Quaternion headrot, Vector3 leftpos, Quaternion leftrot, Vector3 rightpos, Quaternion rightrot)
 	{
-		if (!isLocalPlayer)
-        {
-            syncHeadPos = headpos;
-            syncHeadRot = headrot;
-            syncLeftPos = leftpos;
-            syncLeftRot = leftrot;
-            syncRightPos = rightpos;
-            syncRightRot = rightrot;
-        }
 
-        ///Useless
-        /*
         if (!isLocalPlayer)
         {
             if (Vector3.Distance(syncHeadPos, headpos) > sendThresholdPos)
@@ -206,8 +195,7 @@ public class Movement :NetworkBehaviour {
                 syncRightRot = rightrot;
             }
         }
-        */
-        ///
+
     }
 
 
