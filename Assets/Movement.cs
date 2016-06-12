@@ -22,6 +22,7 @@ public class Movement :NetworkBehaviour {
     public float handLerpPosRate;
     public float handLerpRotRate;
 
+    //not used atm
     public float lerpThresholdPos;
     public float lerpThresholdRot;
 
@@ -41,6 +42,7 @@ public class Movement :NetworkBehaviour {
     // Use this for initialization
     void Start () {
 
+        //status bools
         isHost = GameObject.Find("NetworkManager").GetComponent<CustomManager>().isHost;
         isLocal = isLocalPlayer;
 
@@ -57,16 +59,12 @@ public class Movement :NetworkBehaviour {
 		leftHand = transform.GetChild (1);
 		rightHand = transform.GetChild (2);
 
-        // Initialize buffers
-        //BufferInit();
     }
 
 	void FixedUpdate () {
         if (isLocalPlayer)
         {
             ReadCameraRig();
-            Debug.Log("lefthand " + leftHand.position);
-            Debug.Log("righthand " + rightHand.position);
             CmdSendUpdates(head.position, head.rotation, leftHand.position, leftHand.rotation, rightHand.position, rightHand.rotation);
         }
 
@@ -77,7 +75,7 @@ public class Movement :NetworkBehaviour {
 	}
 
 
-
+    //not used atm
     void BufferInit()
     {
         syncHeadPos = head.position;
@@ -161,10 +159,22 @@ public class Movement :NetworkBehaviour {
 	}
 
 
-	[ClientRpc]
-	void RpcSendUpdates(Vector3 headpos, Quaternion headrot, Vector3 leftpos, Quaternion leftrot, Vector3 rightpos, Quaternion rightrot)
-	{
+    [ClientRpc]
+    void RpcSendUpdates(Vector3 headpos, Quaternion headrot, Vector3 leftpos, Quaternion leftrot, Vector3 rightpos, Quaternion rightrot)
+    {
+        if (!isLocalPlayer)
+        {
+            syncHeadPos = headpos;
+            syncHeadRot = headrot;
+            syncLeftPos = leftpos;
+            syncLeftRot = leftrot;
+            syncRightPos = rightpos;
+            syncRightRot = rightrot;
+        }
+    }
 
+    //pointless, redundant
+    /*
         if (!isLocalPlayer)
         {
             if (Vector3.Distance(syncHeadPos, headpos) > sendThresholdPos)
@@ -198,7 +208,7 @@ public class Movement :NetworkBehaviour {
             }
         }
 
-    }
+    */
 
 
 }
