@@ -195,6 +195,7 @@ public class Movement :NetworkBehaviour {
                 syncRightRot = rightrot;
             }
         }
+    }
 
     
 
