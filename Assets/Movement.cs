@@ -10,7 +10,7 @@ public class Movement :NetworkBehaviour {
     /// Other clients also receive updates constantly (rate of owner update = rate of client updates = rate of CmdSendUpdates())
     /// 
     /// When clients receive updates, the keepThreshold is used to determine whether to discard the new updates.
-    /// Lerp threshold is used 
+    /// Lerping right now is done with one frame buffer (the last received and kept sync value)
     /// </summary>
 
 
@@ -29,10 +29,6 @@ public class Movement :NetworkBehaviour {
     public float headLerpRotRate;
     public float handLerpPosRate;
     public float handLerpRotRate;
-
-    //Determines lerp refresh threshold
-    public float lerpThresholdPos;
-    public float lerpThresholdRot;
 
     //Determines client refresh threshold
     public float keepThresholdPos;      
@@ -101,42 +97,19 @@ public class Movement :NetworkBehaviour {
     {
         if (!isLocalPlayer)
         {
-            if (Vector3.Distance(syncHeadPos, head.position) > lerpThresholdPos)
-            {
-                head.position = Vector3.Lerp(head.position, syncHeadPos, Time.fixedDeltaTime * headLerpPosRate);
-            }
-
-            if (Quaternion.Angle(syncHeadRot, head.rotation) > lerpThresholdRot)
-            {
-                head.rotation = Quaternion.Lerp(head.rotation, syncHeadRot, Time.fixedDeltaTime * headLerpRotRate);
-            }
-
-            if (Vector3.Distance(syncLeftPos, leftHand.position) > lerpThresholdPos)
-            {
-                leftHand.position = Vector3.Lerp(leftHand.position, syncLeftPos, Time.fixedDeltaTime * handLerpPosRate);
-            }
-
-            if (Quaternion.Angle(syncLeftRot, leftHand.rotation) > lerpThresholdRot)
-            {
-                leftHand.rotation = Quaternion.Lerp(leftHand.rotation, syncLeftRot, Time.fixedDeltaTime * handLerpRotRate);
-            }
-
-            if (Vector3.Distance(syncRightPos, rightHand.position) > lerpThresholdPos)
-            {
-                rightHand.position = Vector3.Lerp(rightHand.position, syncRightPos, Time.fixedDeltaTime * handLerpPosRate);
-            }
-
-            if (Quaternion.Angle(syncRightRot, rightHand.rotation) > lerpThresholdRot)
-            {
-                rightHand.rotation = Quaternion.Lerp(rightHand.rotation, syncRightRot, Time.fixedDeltaTime * handLerpRotRate);
-            }
+            head.position = Vector3.Lerp(head.position, syncHeadPos, Time.fixedDeltaTime * headLerpPosRate);
+            
+            head.rotation = Quaternion.Lerp(head.rotation, syncHeadRot, Time.fixedDeltaTime * headLerpRotRate);
+            
+            leftHand.position = Vector3.Lerp(leftHand.position, syncLeftPos, Time.fixedDeltaTime * handLerpPosRate);
+            
+            leftHand.rotation = Quaternion.Lerp(leftHand.rotation, syncLeftRot, Time.fixedDeltaTime * handLerpRotRate);
+            
+            rightHand.position = Vector3.Lerp(rightHand.position, syncRightPos, Time.fixedDeltaTime * handLerpPosRate);
+            
+            rightHand.rotation = Quaternion.Lerp(rightHand.rotation, syncRightRot, Time.fixedDeltaTime * handLerpRotRate);
         }
     }
-
-
-
-
-
 
     [Command]
 	void CmdSendUpdates (Vector3 headpos, Quaternion headrot, Vector3 leftpos, Quaternion leftrot, Vector3 rightpos, Quaternion rightrot)
