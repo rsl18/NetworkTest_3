@@ -77,6 +77,12 @@ public class Movement :NetworkBehaviour {
         }
 	}
 
+
+
+
+
+
+
     void ReadCameraRig()
 	{
 		Transform cameraHead = cameraRig.transform.GetChild (2);
@@ -95,7 +101,7 @@ public class Movement :NetworkBehaviour {
 
     void LerpTransforms()
     {
-        if (!isLocalPlayer)
+        if (!isLocalPlayer & !isHost)
         {
             head.position = Vector3.Lerp(head.position, syncHeadPos, Time.fixedDeltaTime * headLerpPosRate);
             
@@ -129,7 +135,7 @@ public class Movement :NetworkBehaviour {
     void RpcSendUpdates(Vector3 headpos, Quaternion headrot, Vector3 leftpos, Quaternion leftrot, Vector3 rightpos, Quaternion rightrot)
     {
 
-        if (!isLocalPlayer)
+        if (!isLocalPlayer && !isHost)
         {
             if (Vector3.Distance(syncHeadPos, headpos) > keepThresholdPos)
             {
