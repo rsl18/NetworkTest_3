@@ -5,6 +5,14 @@ using System.Collections.Generic;
 
 public class Movement :NetworkBehaviour {
 
+    /// <summary>
+    /// At the moment, the owner updates the server constantly and the server lerps to the new position constantly.
+    /// Other clients also receive updates constantly (rate of owner update = rate of client updates = rate of CmdSendUpdates())
+    /// 
+    /// When clients receive updates, the keepThreshold is used to determine whether to discard the new updates.
+    /// Lerp threshold is used 
+    /// </summary>
+
 
     public bool isHost;
     public bool isLocal;
@@ -27,8 +35,8 @@ public class Movement :NetworkBehaviour {
     public float lerpThresholdRot;
 
     //Determines client refresh threshold
-    public float sendThresholdPos;      
-    public float sendThresholdRot;
+    public float keepThresholdPos;      
+    public float keepThresholdRot;
 
 	Vector3 syncHeadPos;
     public Vector3 syncLeftPos;
@@ -150,32 +158,32 @@ public class Movement :NetworkBehaviour {
 
         if (!isLocalPlayer)
         {
-            if (Vector3.Distance(syncHeadPos, headpos) > sendThresholdPos)
+            if (Vector3.Distance(syncHeadPos, headpos) > keepThresholdPos)
             {
                 syncHeadPos = headpos;
             }
 
-            if (Quaternion.Angle(syncHeadRot, headrot) > sendThresholdRot)
+            if (Quaternion.Angle(syncHeadRot, headrot) > keepThresholdRot)
             {
                 syncHeadRot = headrot;
             }
 
-            if (Vector3.Distance(syncLeftPos, leftpos) > sendThresholdPos)
+            if (Vector3.Distance(syncLeftPos, leftpos) > keepThresholdPos)
             {
                 syncLeftPos = leftpos;
             }
 
-            if (Quaternion.Angle(syncLeftRot, leftrot) > sendThresholdRot)
+            if (Quaternion.Angle(syncLeftRot, leftrot) > keepThresholdRot)
             {
                 syncLeftRot = leftrot;
             }
 
-            if (Vector3.Distance(syncRightPos, rightpos) > sendThresholdPos)
+            if (Vector3.Distance(syncRightPos, rightpos) > keepThresholdPos)
             {
                 syncRightPos = rightpos;
             }
 
-            if (Quaternion.Angle(syncRightRot, rightrot) > sendThresholdRot)
+            if (Quaternion.Angle(syncRightRot, rightrot) > keepThresholdRot)
             {
                 syncRightRot = rightrot;
             }
