@@ -8,13 +8,13 @@ public class CustomManager : NetworkManager
 {
 
 	Transform startPos;
-	GameObject cameraRig;
+	public GameObject cameraRig;
+    public GameObject UI;
 	public Vector3 cameraRigoffset;
 
     public bool isHost;
     public bool isClient;
     public bool isServer;
-
 
 	public override void OnServerAddPlayer(NetworkConnection conn, short playerControllerId)
 	{
@@ -30,23 +30,25 @@ public class CustomManager : NetworkManager
     {
         base.OnStartHost();
         isHost = true;
-
         Debug.Log("HOST");
     }
 
     public override void OnStartServer()
     {
+        cameraRig.SetActive(false);
         base.OnStartServer();
         isServer = true;
         Debug.Log("SERVER");
-
     }
 
     public override void OnStartClient(NetworkClient client)
     {
+        cameraRig.SetActive(true);
+        UI.SetActive(true);
         base.OnStartClient(client);
         isClient = true;
         Debug.Log("CLIENT");
+        
     }
 
 

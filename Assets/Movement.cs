@@ -15,8 +15,8 @@ public class Movement :NetworkBehaviour {
 
 
     public bool isHost;
-    public bool isClient;
-    public bool isServer;
+    new public bool isClient;
+    new public bool isServer;
     public bool isLocal;
 
 	Transform head;
@@ -106,21 +106,18 @@ public class Movement :NetworkBehaviour {
 
     void LerpTransforms()
     {
-        if ((!isLocalPlayer && !isHost) || (!isLocalPlayer && isServer))
-        {
-            head.position = Vector3.Lerp(head.position, syncHeadPos, Time.fixedDeltaTime * headLerpPosRate);
+        head.position = Vector3.Lerp(head.position, syncHeadPos, Time.fixedDeltaTime * headLerpPosRate);
             
-            head.rotation = Quaternion.Lerp(head.rotation, syncHeadRot, Time.fixedDeltaTime * headLerpRotRate);
+        head.rotation = Quaternion.Lerp(head.rotation, syncHeadRot, Time.fixedDeltaTime * headLerpRotRate);
             
-            leftHand.position = Vector3.Lerp(leftHand.position, syncLeftPos, Time.fixedDeltaTime * handLerpPosRate);
+        leftHand.position = Vector3.Lerp(leftHand.position, syncLeftPos, Time.fixedDeltaTime * handLerpPosRate);
             
-            leftHand.rotation = Quaternion.Lerp(leftHand.rotation, syncLeftRot, Time.fixedDeltaTime * handLerpRotRate);
+        leftHand.rotation = Quaternion.Lerp(leftHand.rotation, syncLeftRot, Time.fixedDeltaTime * handLerpRotRate);
             
-            rightHand.position = Vector3.Lerp(rightHand.position, syncRightPos, Time.fixedDeltaTime * handLerpPosRate);
+        rightHand.position = Vector3.Lerp(rightHand.position, syncRightPos, Time.fixedDeltaTime * handLerpPosRate);
             
-            rightHand.rotation = Quaternion.Lerp(rightHand.rotation, syncRightRot, Time.fixedDeltaTime * handLerpRotRate);
-        }
-
+        rightHand.rotation = Quaternion.Lerp(rightHand.rotation, syncRightRot, Time.fixedDeltaTime * handLerpRotRate);
+       
     }
 
     [Command]
@@ -140,38 +137,34 @@ public class Movement :NetworkBehaviour {
     [ClientRpc]
     void RpcSendUpdates(Vector3 headpos, Quaternion headrot, Vector3 leftpos, Quaternion leftrot, Vector3 rightpos, Quaternion rightrot)
     {
-
-        if ((!isLocalPlayer && !isHost) || (!isLocalPlayer && isServer))
+        if (Vector3.Distance(syncHeadPos, headpos) > keepThresholdPos)
         {
-            if (Vector3.Distance(syncHeadPos, headpos) > keepThresholdPos)
-            {
-                syncHeadPos = headpos;
-            }
+            syncHeadPos = headpos;
+        }
 
-            if (Quaternion.Angle(syncHeadRot, headrot) > keepThresholdRot)
-            {
-                syncHeadRot = headrot;
-            }
+        if (Quaternion.Angle(syncHeadRot, headrot) > keepThresholdRot)
+        {
+            syncHeadRot = headrot;
+        }
 
-            if (Vector3.Distance(syncLeftPos, leftpos) > keepThresholdPos)
-            {
-                syncLeftPos = leftpos;
-            }
+        if (Vector3.Distance(syncLeftPos, leftpos) > keepThresholdPos)
+        {
+            syncLeftPos = leftpos;
+        }
 
-            if (Quaternion.Angle(syncLeftRot, leftrot) > keepThresholdRot)
-            {
-                syncLeftRot = leftrot;
-            }
+        if (Quaternion.Angle(syncLeftRot, leftrot) > keepThresholdRot)
+        {
+            syncLeftRot = leftrot;
+        }
 
-            if (Vector3.Distance(syncRightPos, rightpos) > keepThresholdPos)
-            {
-                syncRightPos = rightpos;
-            }
+        if (Vector3.Distance(syncRightPos, rightpos) > keepThresholdPos)
+        {
+            syncRightPos = rightpos;
+        }
 
-            if (Quaternion.Angle(syncRightRot, rightrot) > keepThresholdRot)
-            {
-                syncRightRot = rightrot;
-            }
+        if (Quaternion.Angle(syncRightRot, rightrot) > keepThresholdRot)
+        {
+            syncRightRot = rightrot;
         }
     }
 
